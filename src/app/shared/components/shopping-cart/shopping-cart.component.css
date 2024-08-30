@@ -32,7 +32,14 @@ span {
   margin-left: 25%;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
+  .event-title,
+  .date {
+    width: 230px;
+  }
+}
+
+@media (max-width: 767px) {
   .shopping-cart {
     width: 100%;
     margin-left: 0;

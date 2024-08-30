@@ -4,14 +4,13 @@
         <p class="event-title">{{ eventGroup.title }}</p>
         @for (session of eventGroup.sessions; track session.referenceId) {
         <div>
-            <p class="mb-0">
+            <p class="mb-0 date">
                 {{ session.date | date: 'dd/MM/yyyy' }}:
                 <span class="quantity">x{{ session.quantity }}</span>
                 <img src="assets/img/trash.png" alt="Eliminar"
                     (click)="removeItemCart(eventGroup.eventId, session.date)" />
             </p>
         </div>
-
         }
     </div>
     }
