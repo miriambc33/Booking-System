@@ -1,46 +1,83 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { CartService } from '../../../core/services/cart.service';
 import { CommonModule } from '@angular/common';
 import { Session } from '../../../core/models/session';
 import { Event } from '../../../core/models/event';
+import { Subscription } from 'rxjs';
+import { SessionAvailabilityService } from '../../../core/services/sessionAvailability.service';
+import { ShoppingCartComponent } from '../../../shared/components/shopping-cart/shopping-cart.component';
 
 @Component({
-  standalone: true,
   selector: 'app-event-detail',
+  standalone: true,
+  imports: [CommonModule, ShoppingCartComponent],
   templateUrl: './event-detail.component.html',
-  imports: [CommonModule],
   styleUrls: ['./event-detail.component.css'],
 })
-export class EventDetailComponent implements OnInit {
+export class EventDetailComponent implements OnInit, OnDestroy {
   event: Event | undefined;
   sessions: Session[] = [];
+  private cartSubscription: Subscription | undefined;
 
   constructor(
     private eventService: EventService,
     private route: ActivatedRoute,
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private sessionAvailabilityService: SessionAvailabilityService
   ) {}
 
   ngOnInit() {
+    this.loadEventData();
+    this.cartSubscription = this.cartService
+      .getCartObservable()
+      .subscribe(() => {
+        this.updateSessionAvailability();
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
+  }
+
+  loadEventData() {
     const eventId = this.route.snapshot.paramMap.get('id');
     if (eventId) {
       this.eventService.getEventInfo(+eventId).subscribe((data) => {
         this.event = data.event;
         this.sessions = data.sessions
-          .map((session: Session) => {
-            session.selected = session.selected || 0;
-            session.uniqueId = `${eventId}-${session.date}`;
-            session.originalAvailability = Number(session.availability);
+          .map((session) => {
+            session.referenceId = `${eventId}-${session.date}`;
+            session.initialAvailability = Number(session.availability) || 0;
             return session;
           })
-          .sort((a, b) => {
-            const dateA = Number(a.date);
-            const dateB = Number(b.date);
-            return dateA - dateB;
-          });
+          .sort((a, b) => Number(a.date) - Number(b.date));
+
+        this.updateSessionAvailability();
+      });
+    }
+  }
+
+  updateSessionAvailability() {
+    if (this.event) {
+      this.sessions.forEach((session) => {
+        const cartItem = this.cartService
+          .getCart()
+          .find(
+            (item) =>
+              item.eventId === this.event?.id &&
+              item.sessionDate === session.date
+          );
+
+        const cartQuantity = cartItem ? cartItem.quantity : 0;
+        this.sessionAvailabilityService.initializeSession(
+          session,
+          cartQuantity
+        );
       });
     }
   }
@@ -49,7 +86,6 @@ export class EventDetailComponent implements OnInit {
     if (Number(session.availability) > 0) {
       session.selected = (session.selected || 0) + 1;
       session.availability = (Number(session.availability) - 1).toString();
-
       this.updateCart(session);
     }
   }
@@ -58,7 +94,6 @@ export class EventDetailComponent implements OnInit {
     if (session.selected && session.selected > 0) {
       session.selected--;
       session.availability = (Number(session.availability) + 1).toString();
-
       this.updateCart(session);
     }
   }
@@ -71,66 +106,14 @@ export class EventDetailComponent implements OnInit {
       quantity: session.selected,
     };
 
-    if (session.selected && session.selected > 0) {
-      this.cartService.addToCart(item);
+    if (session.selected > 0) {
+      this.cartService.addCart(item);
     } else {
-      this.cartService.removeFromCart(this.event?.id || '', session.date);
+      this.cartService.removeItemCart(this.event?.id || '', session.date);
     }
-  }
-
-  removeFromCart(eventId: string, sessionDate: string) {
-    const sessionToUpdate = this.sessions.find(
-      (session) => session.date === sessionDate
-    );
-
-    if (sessionToUpdate) {
-      const removedItem = this.cartService
-        .getCart()
-        .find(
-          (item) => item.eventId === eventId && item.sessionDate === sessionDate
-        );
-
-      if (removedItem) {
-        sessionToUpdate.selected = Math.max(0, sessionToUpdate.selected - 1);
-        sessionToUpdate.availability = (
-          Number(sessionToUpdate.availability) + 1
-        ).toString();
-      }
-    }
-
-    this.cartService.removeFromCart(eventId, sessionDate);
   }
 
   goBack() {
     this.router.navigate(['/']);
-  }
-
-  cartGroups() {
-    const grouped = this.cartService.getCart().reduce((acc, item) => {
-      const eventGroup = acc.find(
-        (group: { eventId: string }) => group.eventId === item.eventId
-      );
-      if (!eventGroup) {
-        acc.push({
-          eventId: item.eventId,
-          title: item.eventTitle,
-          sessions: [{ date: item.sessionDate, quantity: item.quantity }],
-        });
-      } else {
-        const session = eventGroup.sessions.find(
-          (sess: { date: string }) => sess.date === item.sessionDate
-        );
-        if (session) {
-          session.quantity = item.quantity;
-        } else {
-          eventGroup.sessions.push({
-            date: item.sessionDate,
-            quantity: item.quantity,
-          });
-        }
-      }
-      return acc;
-    }, [] as { eventId: string; title: string; sessions: { date: string; quantity: number }[] }[]);
-    return grouped;
   }
 }

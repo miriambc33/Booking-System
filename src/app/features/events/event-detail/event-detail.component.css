@@ -18,6 +18,10 @@
   width: 100%;
 }
 
+.no-info {
+  margin-top: 25px;
+}
+
 .content-container {
   display: flex;
   justify-content: space-between;
@@ -71,7 +75,6 @@
   cursor: pointer;
   padding: 0;
   margin: 0 10px;
-  transition: color 0.3s ease;
 }
 
 .controls button:disabled {
@@ -81,21 +84,6 @@
 .controls span {
   font-size: 18px;
   margin: 0 10px;
-}
-
-.shopping-cart {
-  padding: 10px;
-  padding-left: 45px;
-  width: 50%;
-  box-sizing: border-box;
-}
-
-.shopping-cart img {
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  margin-left: 10px;
-  margin-bottom: 3px;
 }
 
 .event-title {
@@ -117,13 +105,16 @@ span {
   margin-left: 25%;
 }
 
+app-shopping-cart {
+  width: 50%;
+}
+
 @media (max-width: 768px) {
   .content-container {
     flex-direction: column;
   }
 
-  .sessions-list,
-  .shopping-cart {
+  .sessions-list {
     width: 100%;
     margin-left: 0;
   }

@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private cart: any[] = [];
+  cart: any[] = [];
+  cartSubject = new BehaviorSubject<any[]>(this.cart);
 
   constructor() {}
 
@@ -12,7 +14,11 @@ export class CartService {
     return this.cart;
   }
 
-  addToCart(item: any) {
+  getCartObservable() {
+    return this.cartSubject.asObservable();
+  }
+
+  addCart(item: any) {
     const existingItemIndex = this.cart.findIndex(
       (cartItem) =>
         cartItem.eventId === item.eventId &&
@@ -26,7 +32,7 @@ export class CartService {
     }
   }
 
-  removeFromCart(eventId: string, sessionDate: string) {
+  removeItemCart(eventId: string, sessionDate: string) {
     const index = this.cart.findIndex(
       (item) => item.eventId === eventId && item.sessionDate === sessionDate
     );
@@ -37,10 +43,13 @@ export class CartService {
       } else {
         this.cart.splice(index, 1);
       }
+
+      this.cartSubject.next(this.cart);
     }
   }
 
   clearCart() {
     this.cart = [];
+    this.cartSubject.next(this.cart);
   }
 }
