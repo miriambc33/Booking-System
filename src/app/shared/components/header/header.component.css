@@ -1,0 +1,7 @@
+.header {
+  background-color: var(--color-light-blue-header);
+  color: var(--color-text);
+  box-sizing: border-box;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 2.7);
+  height: 80px;
+}

@@ -1,0 +1,110 @@
+.event-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.event-card {
+  flex: 1 1 calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  height: 100%;
+}
+
+.event-card img {
+  max-width: 100%;
+  height: auto;
+}
+
+.event-title {
+  font-size: 2rem;
+  color: var(--color-text-title-subtitle);
+  font-weight: bold;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.event-subtitle {
+  font-size: 1.5rem;
+  color: var(--color-text-title-subtitle);
+  font-weight: normal;
+  cursor: pointer;
+}
+
+button {
+  background-color: var(--color-btn-buyer);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  height: 50px;
+  margin-top: auto;
+}
+
+button:hover {
+  background-color: #616161;
+}
+
+.description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.95rem;
+  -webkit-box-orient: vertical;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .event-card {
+    flex: 1 1 calc(50% - 32px);
+  }
+
+  .description {
+    display: block;
+  }
+
+  .event-title {
+    font-size: 1.5rem;
+  }
+
+  .event-subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .event-card {
+    margin: 8px;
+    flex: 1 1 calc(100% - 16px);
+  }
+
+  .event-title {
+    font-size: 1.2rem;
+    margin: 0px !important;
+    padding-bottom: 0px !important;
+  }
+
+  .event-subtitle {
+    font-size: 0.9rem;
+    margin: 0px !important;
+  }
+
+  .card-text {
+    margin: 0px !important;
+    padding-bottom: 0px !important;
+  }
+
+  button {
+    height: 35px;
+    font-size: 0.9rem;
+  }
+}

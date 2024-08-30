@@ -1,0 +1,21 @@
+<div class="container mt-4">
+    <div class="row event-list">
+        @for (event of events; track event.id) {
+        <div class="col-12 col-md-6 col-lg-4 p-0">
+            <div class="event-card card p-0 shadow-sm">
+                <div class="card-body p-0">
+                    <p class="event-title p-1 mt-2 ms-2 text-uppercase" (click)="buyEvent(event.id)">{{ event.title }}
+                    </p>
+                    <p class="event-subtitle p-1 ms-2 " (click)="buyEvent(event.id)">{{ event.subtitle }}</p>
+                    <img [src]="event.image" class="card-img-top" alt="{{ event.title }}">
+                    <p class="card-text m-1 p-1">{{ event.place }}</p>
+                    <p class="card-text m-1 p-1">{{ event.startDate | date:'dd/MM/yyyy' }} - {{ event.endDate |
+                        date:'dd/MM/yyyy' }}</p>
+                    <p class="card-text m-1 p-1 mb-2 description d-none d-md-block" [innerHTML]="event.description"></p>
+                    <button class="w-100 mt-auto" (click)="buyEvent(event.id)">Comprar</button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>

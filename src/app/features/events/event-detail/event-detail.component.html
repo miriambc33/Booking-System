@@ -1,0 +1,42 @@
+<div class="event-detail">
+    <button class="btnBack" (click)="goBack()">Volver</button>
+    <div class="content-container">
+        <div class="sessions-list" [ngClass]="{ 'no-info': !sessions || sessions.length === 0 }">
+            @if (sessions && sessions.length > 0) {
+            @for (session of sessions; track session.uniqueId) {
+            <div class="session">
+                <div class="session-row">
+                    <p>Fecha: {{ session.date | date:'dd/MM/yyyy' }} - Disponibilidad: {{ session.availability }}</p>
+                    <div class="controls">
+                        <button (click)="decrement(session)">-</button>
+                        <span>{{ session.selected || 0 }}</span>
+                        <button (click)="increment(session)">+</button>
+                    </div>
+                </div>
+            </div>
+            }
+            } @else {
+            <p class="no-info">EVENT INFO NOT FOUND</p>
+            }
+        </div>
+
+        <div class="shopping-cart">
+            @for (eventGroup of cartGroups(); track eventGroup.eventId) {
+            <div class="session-item">
+                <p class="event-title">{{ eventGroup.title }}</p>
+                @for (session of eventGroup.sessions; track session.uniqueId) {
+                <div>
+                    <p class="mb-0">
+                        {{ session.date | date: 'dd/MM/yyyy' }}:
+                        <span class="quantity">x{{ session.quantity }}</span>
+                        <img src="assets/img/trash.png" alt="Eliminar"
+                            (click)="removeFromCart(eventGroup.eventId, session.date)" />
+                    </p>
+                </div>
+
+                }
+            </div>
+            }
+        </div>
+    </div>
+</div>

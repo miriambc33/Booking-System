@@ -1,0 +1,130 @@
+.event-detail {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.btnBack {
+  margin-top: 25px;
+  background: none;
+  border: none;
+  color: var(--color-text-title-subtitle);
+  font-size: 20px;
+  padding-right: 200px;
+  cursor: pointer;
+  display: block;
+  text-align: right;
+  width: 100%;
+}
+
+.content-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sessions-list {
+  border: 2px solid #ccc;
+  padding: 10px;
+  margin-left: auto;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.sessions-list.no-info {
+  border: none;
+}
+
+.session {
+  margin-bottom: 10px;
+}
+
+.session-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 0;
+  text-align: right;
+}
+
+.session p {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.controls button {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.controls button:disabled {
+  color: #007bff;
+}
+
+.controls span {
+  font-size: 18px;
+  margin: 0 10px;
+}
+
+.shopping-cart {
+  padding: 10px;
+  padding-left: 45px;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.shopping-cart img {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  margin-bottom: 3px;
+}
+
+.event-title {
+  font-weight: 500;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.session-item {
+  margin-bottom: 15px;
+  padding: 10px 0;
+}
+
+.session-item:last-child {
+  margin-bottom: 0;
+}
+
+span {
+  margin-left: 25%;
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+  }
+
+  .sessions-list,
+  .shopping-cart {
+    width: 100%;
+    margin-left: 0;
+  }
+}
